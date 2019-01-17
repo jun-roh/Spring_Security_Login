@@ -1,0 +1,103 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.2.RELEASE'
+        thymeleaf = '2.3.0'
+        log4j2 = '1.16'
+        commonValidator = '1.6'
+        jackson = '2.9.7'
+        queryDsl = '4.2.1'
+        mySql = '5.1.36'
+        slf4j = '2.11.1'
+        slf4jVersion = '1.7.25'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.jun'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starter
+    compile group: "org.springframework.boot", name: "spring-boot-starter", version: "${springBootVersion}"
+    compile group: "org.springframework.boot", name: "spring-boot-starter-actuator", version: "${springBootVersion}"
+    compile group: "org.springframework.boot", name: "spring-boot-starter-web", version: "${springBootVersion}"
+    compile group: "org.springframework.boot", name: "spring-boot-starter-tomcat", version: "${springBootVersion}"
+    compile group: "commons-validator", name: "commons-validator", version: "${commonValidator}"
+
+    // Spring Thymeleaf
+    compile group: "org.springframework.boot", name: "spring-boot-starter-thymeleaf", version: "${springBootVersion}"
+    compile group: "nz.net.ultraq.thymeleaf", name: "thymeleaf-layout-dialect", version: "${thymeleaf}"
+
+    // Spring JPA DATA
+    compile group: "org.springframework.boot", name: "spring-boot-starter-data-jpa", version: "${springBootVersion}"
+    compile group: "org.bgee.log4jdbc-log4j2", name: "log4jdbc-log4j2-jdbc4.1", version: "${log4j2}"
+
+    // Spring Security
+    compile group: "org.springframework.boot", name: "spring-boot-starter-security", version: "${springBootVersion}"
+    compile group: "org.springframework.security.oauth", name: "spring-security-oauth2", version: "${springBootVersion}"
+
+    // Jackson Json
+    compile group: "com.fasterxml.jackson.core", name: "jackson-core", version: "${jackson}"
+    compile group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "${jackson}"
+    compile group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "${jackson}"
+
+    // QueryDSL
+    compile group: "com.querydsl", name: "querydsl-core", version: "${queryDsl}"
+    compile group: "com.querydsl", name: "querydsl-apt", version: "${queryDsl}"
+    compile group: "com.querydsl", name: "querydsl-jpa", version: "${queryDsl}"
+
+    // Lombok
+    compileOnly("org.projectlombok:lombok")
+
+    // Runtime
+    runtime group: "org.springframework.boot", name: "spring-boot-devtools", version: "${springBootVersion}"
+    runtime group: "mysql", name: "mysql-connector-java", version: "${mySql}"
+
+    // Test
+    testCompile group: "org.springframework.boot", name: "spring-boot-starter-test", version: "${springBootVersion}"
+}
+
+/**** QueryDSL Class Generate Script ****/
+def queryDslOutput = file("src/main/generated")
+sourceSets {
+    main {
+        java {
+            srcDir queryDslOutput
+        }
+    }
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
+    file(new File(projectDir, "/src/main/generated")).deleteDir()
+    file(new File(projectDir, "/src/main/generated")).mkdirs()
+
+    source = sourceSets.main.java
+    classpath = configurations.compile + configurations.compileOnly
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor", 'com.querydsl.apt.jpa.JPAAnnotationProcessor,lombok.launch.AnnotationProcessorHider$AnnotationProcessor'
+    ]
+    options.encoding = 'UTF-8'
+    destinationDir = file('src/main/generated')
+}
+
+
+compileJava {
+    dependsOn generateQueryDSL
+}
