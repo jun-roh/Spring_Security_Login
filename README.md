@@ -1,12 +1,12 @@
-##Simple Sign Up & Simple Login
+## Simple Sign Up & Simple Login
 
-####Purpose
+#### Purpose
 
 * User Signup with Spring Security
 * User Authority
 * Move pages by User Authority when user login
 
-####Structure
+#### Structure
 
 - SimpleLogin
     - src
@@ -35,13 +35,13 @@
         - test
     - build.gradle
 
-####Authority
+#### Authority
 setting at com.jun.login.security.securityConfig
 * Basic
 * Client
 * Admin
 
-####Go to Page After Login
+#### Go to Page After Login
 setting at com.jun.login.security.securityHandler
 
 #### ScreenShot
@@ -52,7 +52,7 @@ setting at com.jun.login.security.securityHandler
 ![Alt text](/screenshot/signup.png "Optional title")
 
 
-#####Reference
+##### Reference
 * Login Page Design Reference
     * https://bootsnipp.com/tags/login
 

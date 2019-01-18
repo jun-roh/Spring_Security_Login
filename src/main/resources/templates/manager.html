@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:each="member : ${user.authorities}"
+          th:if="${member.toString() == 'MANAGER'}">
+    MANAGER AUTH
+</th:block>
+</body>
+</html>

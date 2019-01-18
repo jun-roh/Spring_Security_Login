@@ -67,30 +67,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 //                .exceptionHandling()
 //                .accessDeniedPage("/403");
 //
-//        // Form Login config
-//        http
-//                .authorizeRequests()
-//                .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .successHandler(successHandler())
-//                .failureUrl("/login?error=true");
-//
-//        http
-//                .authorizeRequests()
-//                .and()
-//                .logout()
-//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//                .logoutSuccessUrl("/")
-//                .permitAll();
+        // Form Login config
+        http
+                .authorizeRequests()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .successHandler(successHandler())
+                .failureUrl("/login?error=true");
+
+        http
+                .authorizeRequests()
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/")
+                .permitAll();
 
         // Logout Config
-//        http
-//                .authorizeRequests()
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/");
+        http
+                .authorizeRequests()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/");
 
     }
 

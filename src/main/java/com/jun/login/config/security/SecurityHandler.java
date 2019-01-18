@@ -19,11 +19,11 @@ public class SecurityHandler implements AuthenticationSuccessHandler {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
         if (roles.contains("ADMIN")) {
-            response.sendRedirect("/admin/main");
+            response.sendRedirect("/admin");
         }else if (roles.contains("MANAGER")){
-            response.sendRedirect("/center/main");
+            response.sendRedirect("/manager");
         }else{
-            response.sendRedirect("/");
+            response.sendRedirect("/basic");
         }
     }
 }

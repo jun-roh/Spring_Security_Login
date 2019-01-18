@@ -4,8 +4,12 @@ import com.jun.login.domain.Member.Member;
 import com.jun.login.repository.Member.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +29,7 @@ public class MainController {
     MemberRepository memberRepository;
 
     @GetMapping("/")
-    public String index(){
+    public String index(Model model){
         return "/index";
     }
 
@@ -38,15 +42,40 @@ public class MainController {
     @PostMapping("/join")
     public String joinPost(@ModelAttribute("member") Member member){
         String encryptPw = passwordEncoder.encode(member.getMpw());
-
         member.setMpw(encryptPw);
-        System.out.println(member.getMid());
-        System.out.println(member.getMname());
-        System.out.println(member.getServiceType());
-        System.out.println(member.getMemberRoles().size());
-        System.out.println(member.getMpw());
-
         memberRepository.save(member);
         return "/joinResult";
+    }
+
+    @GetMapping("/accessDenied")
+    public void accessDenied() {
+    }
+
+    @PostMapping("/logout")
+    public void logout() {
+    }
+
+    @GetMapping("/basic")
+    public String basicView(Model model){
+        model.addAttribute("user", getUserDetails());
+        return "/basic";
+    }
+
+    @GetMapping("/manager")
+    public String managerView(Model model){
+        model.addAttribute("user", getUserDetails());
+        return "/manager";
+    }
+
+    @GetMapping("/admin")
+    public String adminView(Model model){
+        model.addAttribute("user", getUserDetails());
+        return "/admin";
+    }
+
+    public User getUserDetails(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return user;
     }
 }
